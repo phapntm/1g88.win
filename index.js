@@ -10,11 +10,19 @@ WSS.on("connection", function connection(ws, request) {
   clientWS.on("message", (data) => {
     ws.send(data);
   });
-  clientWS.on("error", (data) => {
+  clientWS.on("error", () => {
     ws.close();
   });
-  clientWS.on("close", (data) => {
+  clientWS.on("close", () => {
     ws.close();
+  });
+
+  ws.on("message", (message) => {
+    try {
+      clientWS.send(message);
+    } catch (error) {
+      console.log("error", error);
+    }
   });
   //   const urlWs = `wss://chat.herransmap.info/chatHub?access_token=${accessToken}`;
   //   const messageSub = `{"protocol":"json","version":1}`;
