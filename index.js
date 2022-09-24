@@ -1,20 +1,21 @@
 const { WebSocketServer, WebSocket } = require("ws");
-const proxy = "";
+const HttpsProxyAgent = require("https-proxy-agent");
+const proxy = "http://gate.smartproxy.com:10000";
+const originDomain = "https://1g88.vin";
 const WSS = new WebSocketServer({ port: 46578, path: "/chatHub" });
-// WSS.on("connection", function connection(ws, request) {
-//   ws.on("message", function message(data) {
-//     console.log("received: %s", data);
-//   });
-
-//   ws.send("something");
-//   console.log("url: ", request.url);
-//   //   const clientWS = new WebSocket("ws://www.host.com/path");
-// });
-const url = require("url");
 WSS.on("connection", function connection(ws, request) {
-  //   var agent = new HttpsProxyAgent("http://gate.smartproxy.com:10000");
-  const accessToken = request.url.split("=")[1];
-  console.log(accessToken);
+  //   var agent = new HttpsProxyAgent(proxy);
+
+  const clientWS = new WebSocket(originDomain + request.url);
+  clientWS.on("message", (data) => {
+    ws.send(data);
+  });
+  clientWS.on("error", (data) => {
+    ws.close();
+  });
+  clientWS.on("close", (data) => {
+    ws.close();
+  });
   //   const urlWs = `wss://chat.herransmap.info/chatHub?access_token=${accessToken}`;
   //   const messageSub = `{"protocol":"json","version":1}`;
   //   let   messageDelay =[];
@@ -32,17 +33,6 @@ WSS.on("connection", function connection(ws, request) {
   //         .replace("tai88vin.link", "88vin.in")
   //         .replace("tai88vin.link", "88vin.in")
   //     );
-  //   });
-
-  //   // on error
-  //   wsClient.on("error", (error) => {
-  //     console.log('wsClientError',error)
-  //     ws.terminate();
-  //   });
-
-  //   // on client diss connect
-  //   ws.on("close", () => {
-  //     wsClient.close();
   //   });
 
   //   // wsClient error
