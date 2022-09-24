@@ -1,6 +1,6 @@
-const WebSocket = require("ws");
+const { WebSocket } = require("ws");
 const proxy = "";
-const WSS = new WebSocket({ port: 46578, pathname: "/chatHub" });
+const WSS = new WebSocket.Server({ port: 46578, path: "/chatHub" });
 WSS.on("connection", function connection(ws) {
   ws.on("message", function message(data) {
     console.log("received: %s", data);
