@@ -1,7 +1,7 @@
 const { WebSocketServer, WebSocket } = require("ws");
 const HttpsProxyAgent = require("https-proxy-agent");
 const proxy = "http://gate.smartproxy.com:10000";
-const originDomain = "https://1g88.vin";
+const originDomain = "wss://chat.1g88.vin";
 const WSS = new WebSocketServer({ port: 46578, path: "/chatHub" });
 WSS.on("connection", function connection(ws, request) {
   //   var agent = new HttpsProxyAgent(proxy);
