@@ -7,6 +7,6 @@ WSS.on("connection", function connection(ws) {
   });
 
   ws.send("something");
-  console.log("connected");
+  console.log("url: ", ws.upgradeReq.url);
   //   const clientWS = new WebSocket("ws://www.host.com/path");
 });
