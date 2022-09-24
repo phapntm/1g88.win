@@ -8,7 +8,7 @@ WSS.on("connection", function connection(ws, request) {
   const messageSaveOnNotConnectYet = [];
   const clientWS = new WebSocket(originDomain + request.url);
   clientWS.on("message", (data) => {
-    ws.send(data);
+    ws.send(data.toString());
   });
   clientWS.on("error", () => {
     ws.close();
