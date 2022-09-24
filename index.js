@@ -5,7 +5,7 @@ const originDomain = "wss://chat.1g88.vin";
 const WSS = new WebSocketServer({ port: 46578, path: "/chatHub" });
 WSS.on("connection", function connection(ws, request) {
   //   var agent = new HttpsProxyAgent(proxy);
-
+  const messageSaveOnNotConnectYet = [];
   const clientWS = new WebSocket(originDomain + request.url);
   clientWS.on("message", (data) => {
     ws.send(data);
@@ -16,10 +16,17 @@ WSS.on("connection", function connection(ws, request) {
   clientWS.on("close", () => {
     ws.close();
   });
+  clientWS.on("open", () => {
+    while (messageSaveOnNotConnectYet.length > 0) {
+      const message = messageSaveOnNotConnectYet.shift();
+      clientWS.send(message);
+    }
+  });
 
   ws.on("message", (message) => {
     try {
-      clientWS.send(message);
+      if (clientWS.readyState == 0) messageSaveOnNotConnectYet.push(message);
+      else clientWS.send(message);
     } catch (error) {
       console.log("error", error);
     }
